@@ -1,0 +1,2095 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-900 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma Interactiva de Macroeconomía y Economía Global</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f5ff',
+              100: '#e0ebff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* CSS para animación de tarjetas 3D */
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+    
+    /* Scrollbar personalizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col font-sans bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- ENCABEZADO Y NAVEGACIÓN PRINCIPAL -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800 shadow-xl bg-slate-900/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo & Titulo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('resumen')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-blue-600 to-teal-400 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+            <i class="fa-solid fa-chart-line text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-2">
+              Macro<span class="text-indigo-400">Master</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">2.0</span>
+            </h1>
+            <p class="text-xs text-slate-400 hidden sm:block">Compendio Completo de Macroeconomía y Economía Global</p>
+          </div>
+        </div>
+
+        <!-- Links de Navegación (Desktop) -->
+        <nav class="hidden md:flex space-x-1 lg:space-x-2">
+          <button onclick="switchTab('flashcards')" id="nav-flashcards" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-layer-group text-indigo-400"></i>
+            <span>Fichas de Estudio</span>
+          </button>
+          <button onclick="switchTab('examenes')" id="nav-examenes" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-file-pen text-amber-400"></i>
+            <span>Exámenes</span>
+          </button>
+          <button onclick="switchTab('juegos')" id="nav-juegos" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-gamepad text-emerald-400"></i>
+            <span>Minijuegos</span>
+          </button>
+          <button onclick="switchTab('resumen')" id="nav-resumen" class="nav-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
+            <i class="fa-solid fa-book-open text-sky-400"></i>
+            <span>Resumen Integral</span>
+          </button>
+        </nav>
+
+        <!-- Indicador de conceptos -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-800/80 border border-slate-700/50 text-xs text-slate-300">
+          <i class="fa-solid fa-database text-teal-400"></i>
+          <span><strong class="text-white">61</strong> Conceptos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navegación Móvil Bottom / Dropdown -->
+    <div class="md:hidden flex justify-around border-t border-slate-800 bg-slate-900/95 py-2 px-1">
+      <button onclick="switchTab('flashcards')" id="mob-nav-flashcards" class="mob-nav-btn flex flex-col items-center py-1 px-2 text-xs font-medium text-slate-400 hover:text-indigo-400">
+        <i class="fa-solid fa-layer-group text-base mb-1"></i>
+        <span>Fichas</span>
+      </button>
+      <button onclick="switchTab('examenes')" id="mob-nav-examenes" class="mob-nav-btn flex flex-col items-center py-1 px-2 text-xs font-medium text-slate-400 hover:text-amber-400">
+        <i class="fa-solid fa-file-pen text-base mb-1"></i>
+        <span>Exámenes</span>
+      </button>
+      <button onclick="switchTab('juegos')" id="mob-nav-juegos" class="mob-nav-btn flex flex-col items-center py-1 px-2 text-xs font-medium text-slate-400 hover:text-emerald-400">
+        <i class="fa-solid fa-gamepad text-base mb-1"></i>
+        <span>Juegos</span>
+      </button>
+      <button onclick="switchTab('resumen')" id="mob-nav-resumen" class="mob-nav-btn flex flex-col items-center py-1 px-2 text-xs font-medium text-slate-400 hover:text-sky-400">
+        <i class="fa-solid fa-book-open text-base mb-1"></i>
+        <span>Resumen</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+    <!-- SECCIÓN 1: FICHAS DE ESTUDIO (FLASHCARDS) -->
+    <section id="sec-flashcards" class="tab-content space-y-6 hidden">
+      <!-- Header de Fichas -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-layer-group text-indigo-400"></i> Fichas de Estudio Interactivas
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">Haz clic en la tarjeta o presiona <kbd class="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-xs text-indigo-300">Espacio</kbd> para voltear.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Filtro por Sección -->
+          <select id="flashcard-section-select" onchange="filterFlashcards()" class="bg-slate-800 text-slate-200 border border-slate-700 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="ALL">Todas las Secciones (61)</option>
+            <option value="1">I. Crecimiento del Dinero e Inflación (15)</option>
+            <option value="2">II. Política Fiscal y Finanzas Públicas (13)</option>
+            <option value="3">III. Macroeconomía de Economía Abierta (9)</option>
+            <option value="4">IV. Comercio e Instrumentos Comerciales (6)</option>
+            <option value="5">V. Globalización Económica (6)</option>
+            <option value="6">VI. Política Económica Global (6)</option>
+            <option value="7">VII. Integración Económica (6)</option>
+          </select>
+
+          <!-- Toggle vista: Flashcard individual vs Mosaico -->
+          <div class="flex bg-slate-800 p-1 rounded-xl border border-slate-700">
+            <button onclick="setFlashcardMode('single')" id="fc-mode-single" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all">Tarjeta</button>
+            <button onclick="setFlashcardMode('grid')" id="fc-mode-grid" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all">Cuadrícula</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA INDIVIDUAL (SINGLE CARD) -->
+      <div id="fc-single-container" class="max-w-2xl mx-auto space-y-6">
+        <!-- Barra de Progreso y Marcadores -->
+        <div class="flex items-center justify-between text-sm text-slate-400 px-2">
+          <span id="fc-counter" class="font-semibold text-indigo-400">Tarjeta 1 de 61</span>
+          <div class="flex items-center gap-2">
+            <span id="fc-mastered-count" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1 rounded-full text-xs font-medium">
+              <i class="fa-solid fa-check text-emerald-400 mr-1"></i> 0 Dominadas
+            </span>
+          </div>
+        </div>
+
+        <!-- Tarjeta 3D -->
+        <div class="perspective-1000 w-full h-80 sm:h-96 cursor-pointer" onclick="flipCurrentCard()">
+          <div id="flashcard-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-2xl rounded-3xl">
+            
+            <!-- Frente de la Tarjeta -->
+            <div class="absolute inset-0 w-full h-full backface-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950/60 border-2 border-indigo-500/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-indigo-900/20">
+              <div class="flex justify-between items-start">
+                <span id="fc-front-section" class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-semibold tracking-wide">
+                  Sección
+                </span>
+                <button onclick="toggleMastered(event)" id="fc-mastered-btn" class="text-slate-500 hover:text-emerald-400 transition-colors p-2 text-xl" title="Marcar como dominada">
+                  <i class="fa-regular fa-circle-check"></i>
+                </button>
+              </div>
+
+              <div class="text-center my-auto px-4">
+                <h3 id="fc-front-title" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
+                  Nombre del Concepto
+                </h3>
+                <p class="text-slate-400 text-xs mt-4 flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-rotate text-indigo-400 animate-spin-slow"></i> Haz clic para revelar definición
+                </p>
+              </div>
+
+              <div class="flex justify-between text-xs text-slate-500 border-t border-slate-800 pt-3">
+                <span>Concepto <span id="fc-front-id">#1</span></span>
+                <span>MacroMaster PDF Study</span>
+              </div>
+            </div>
+
+            <!-- Reverso de la Tarjeta -->
+            <div class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 border-2 border-teal-500/40 rounded-3xl p-6 sm:p-8 flex flex-col justify-between shadow-teal-900/20">
+              <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <span id="fc-back-title" class="font-bold text-teal-300 text-sm sm:text-base truncate max-w-[80%]">
+                  Nombre del Concepto
+                </span>
+                <span class="text-xs text-teal-400 bg-teal-500/10 px-2.5 py-1 rounded-full border border-teal-500/20">Definición Exacta</span>
+              </div>
+
+              <div class="my-auto overflow-y-auto max-h-56 pr-2 py-2">
+                <p id="fc-back-def" class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                  Definición completa...
+                </p>
+                <div id="fc-back-extra" class="mt-3 p-3 bg-slate-950/60 rounded-xl border border-slate-800 text-xs text-indigo-300 font-mono hidden">
+                  <!-- Fórmulas o Notas adicionales -->
+                </div>
+              </div>
+
+              <div class="flex justify-between items-center text-xs text-slate-400 border-t border-slate-800 pt-3">
+                <span class="text-slate-500"><i class="fa-solid fa-rotate-left mr-1"></i> Clic para regresar</span>
+                <span id="fc-back-section-name" class="text-slate-400">Sección</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Botones de Control -->
+        <div class="flex items-center justify-between gap-3">
+          <button onclick="prevCard()" class="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Anterior
+          </button>
+          <button onclick="shuffleCards()" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-indigo-400 font-semibold rounded-xl border border-slate-700 transition-all" title="Barajar Fichas">
+            <i class="fa-solid fa-shuffle"></i>
+          </button>
+          <button onclick="nextCard()" class="flex-1 py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2">
+            Siguiente <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- VISTA EN CUADRÍCULA (GRID VIEW) -->
+      <div id="fc-grid-container" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: EXÁMENES -->
+    <section id="sec-examenes" class="tab-content space-y-6 hidden">
+      <!-- Selección de Examen -->
+      <div id="exam-selection-screen" class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <h2 class="text-3xl font-extrabold text-white">Evaluación de Conocimientos</h2>
+          <p class="text-slate-400 text-sm">Selecciona una modalidad. Las preguntas y opciones se generan de forma aleatoria en cada intento basándose en los 61 conceptos exactos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-4">
+          <!-- Card Examen 15 -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Rápido</span>
+                <h3 class="text-xl font-bold text-white mt-2">Examen Express</h3>
+                <p class="text-slate-400 text-sm mt-1">15 preguntas aleatorias. Ideal para repasos diarios rápidos.</p>
+              </div>
+            </div>
+            <button onclick="startExam(15)" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+              Iniciar (15 Preguntas) <i class="fa-solid fa-play"></i>
+            </button>
+          </div>
+
+          <!-- Card Examen 20 -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-amber-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20">Estándar</span>
+                <h3 class="text-xl font-bold text-white mt-2">Examen Estándar</h3>
+                <p class="text-slate-400 text-sm mt-1">20 preguntas con cobertura amplia de los temas principales.</p>
+              </div>
+            </div>
+            <button onclick="startExam(20)" class="w-full py-3 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-amber-600/30 flex items-center justify-center gap-2">
+              Iniciar (20 Preguntas) <i class="fa-solid fa-play"></i>
+            </button>
+          </div>
+
+          <!-- Card Examen 25 -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Exhaustivo</span>
+                <h3 class="text-xl font-bold text-white mt-2">Examen Completo</h3>
+                <p class="text-slate-400 text-sm mt-1">25 preguntas minuciosas para una evaluación integral.</p>
+              </div>
+            </div>
+            <button onclick="startExam(25)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2">
+              Iniciar (25 Preguntas) <i class="fa-solid fa-play"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANTALLA ACTIVA DEL EXAMEN -->
+      <div id="exam-active-screen" class="hidden max-w-3xl mx-auto space-y-6">
+        <!-- Header Examen -->
+        <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center gap-3">
+            <span id="exam-badge" class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold">
+              Examen Activo
+            </span>
+            <span id="exam-progress-text" class="text-slate-300 font-semibold text-sm">Pregunta 1 de 15</span>
+          </div>
+          <button onclick="quitExam()" class="text-xs text-rose-400 hover:text-rose-300 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20 transition-all">
+            <i class="fa-solid fa-xmark mr-1"></i> Cancelar
+          </button>
+        </div>
+
+        <!-- Barra de progreso visual -->
+        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+          <div id="exam-progress-bar" class="bg-indigo-500 h-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Pregunta -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6">
+          <div class="space-y-2">
+            <span id="exam-q-category" class="text-xs font-semibold text-indigo-400 tracking-wide uppercase">Sección</span>
+            <h3 id="exam-q-text" class="text-xl sm:text-2xl font-bold text-white leading-relaxed">
+              ¿Texto de la pregunta?
+            </h3>
+          </div>
+
+          <!-- Opciones de respuesta -->
+          <div id="exam-options-container" class="space-y-3">
+            <!-- Renderizado dinámico -->
+          </div>
+
+          <!-- Navegación entre preguntas del examen -->
+          <div class="flex justify-between items-center pt-4 border-t border-slate-800">
+            <button id="exam-prev-btn" onclick="navigateExam(-1)" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-semibold transition-all flex items-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Anterior
+            </button>
+            <button id="exam-next-btn" onclick="navigateExam(1)" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-semibold transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+              Siguiente <i class="fa-solid fa-arrow-right"></i>
+            </button>
+            <button id="exam-finish-btn" onclick="finishExam()" class="hidden px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-sm font-bold transition-all shadow-lg shadow-emerald-600/30 flex items-center gap-2">
+              Finalizar y Evaluar <i class="fa-solid fa-check-double"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANTALLA DE RESULTADOS DEL EXAMEN -->
+      <div id="exam-results-screen" class="hidden max-w-4xl mx-auto space-y-8">
+        <!-- Resumen de puntuación -->
+        <div class="glass-card rounded-3xl p-8 border border-slate-800 text-center space-y-6 bg-gradient-to-b from-slate-900 to-slate-950">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-3xl">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <div>
+            <h2 class="text-3xl font-extrabold text-white">Resultados del Examen</h2>
+            <p id="exam-results-subtitle" class="text-slate-400 text-sm mt-1">Has completado el examen exitosamente.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto py-4">
+            <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800">
+              <span class="text-xs text-slate-400">Calificación</span>
+              <p id="res-score-pct" class="text-3xl font-black text-indigo-400 mt-1">0%</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+              <span class="text-xs text-emerald-400">Aciertos</span>
+              <p id="res-score-correct" class="text-3xl font-black text-emerald-400 mt-1">0</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20">
+              <span class="text-xs text-rose-400">Errores</span>
+              <p id="res-score-incorrect" class="text-3xl font-black text-rose-400 mt-1">0</p>
+            </div>
+          </div>
+
+          <div class="flex justify-center gap-4">
+            <button onclick="resetExamSelection()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center gap-2">
+              <i class="fa-solid fa-rotate-right"></i> Hacer Otro Examen
+            </button>
+          </div>
+        </div>
+
+        <!-- Desglose de preguntas -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-indigo-400"></i> Desglose Detallado de Respuestas
+          </h3>
+          <div id="exam-breakdown-container" class="space-y-4">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 3: MINIJUEGOS -->
+    <section id="sec-juegos" class="tab-content space-y-6 hidden">
+      <!-- Selector de Juegos -->
+      <div id="games-menu-screen" class="space-y-6">
+        <div class="text-center max-w-2xl mx-auto space-y-2">
+          <h2 class="text-3xl font-extrabold text-white">Minijuegos de Aprendizaje</h2>
+          <p class="text-slate-400 text-sm">Refuerza tus conocimientos macroeconómicos mediante dinámicas ágiles y competitivas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pt-4">
+          <!-- Game 1: Memory Match -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-[#000] fa-clone"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">Memoria</span>
+                <h3 class="text-xl font-bold text-white mt-2">Empareja o Pierde</h3>
+                <p class="text-slate-400 text-sm mt-1">Voltea tarjetas contra el reloj y relaciona cada concepto con su definición correcta.</p>
+              </div>
+            </div>
+            <button onclick="startGame(1)" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+              Jugar Ahora <i class="fa-solid fa-gamepad"></i>
+            </button>
+          </div>
+
+          <!-- Game 2: Verdadero o Falso -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-scale-balanced"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">Velocidad</span>
+                <h3 class="text-xl font-bold text-white mt-2">Verdadero o Falso</h3>
+                <p class="text-slate-400 text-sm mt-1">Valida o descarta afirmaciones en rondas rápidas para detectar trampas conceptuales.</p>
+              </div>
+            </div>
+            <button onclick="startGame(2)" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2">
+              Jugar Ahora <i class="fa-solid fa-gamepad"></i>
+            </button>
+          </div>
+
+          <!-- Game 3: Contrarreloj -->
+          <div class="glass-card rounded-3xl p-6 border border-slate-800 hover:border-rose-500/50 transition-all flex flex-col justify-between space-y-6 group">
+            <div class="space-y-4">
+              <div class="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-stopwatch"></i>
+              </div>
+              <div>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-500/10 text-rose-300 border border-rose-500/20">Desafío</span>
+                <h3 class="text-xl font-bold text-white mt-2">Contrarreloj</h3>
+                <p class="text-slate-400 text-sm mt-1">Resuelve la mayor cantidad de reactivos. Cada acierto te otorga segundos extra.</p>
+              </div>
+            </div>
+            <button onclick="startGame(3)" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2">
+              Jugar Ahora <i class="fa-solid fa-gamepad"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUEGO 1: EMPAREJA O PIERDE (MEMORY MATCH) -->
+      <div id="game1-screen" class="hidden space-y-6 max-w-4xl mx-auto">
+        <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+          <div>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-clone text-indigo-400"></i> Empareja o Pierde
+            </h3>
+            <span class="text-xs text-slate-400">Encuentra los pares Concepto - Definición</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-700 text-sm font-mono text-amber-400 font-bold flex items-center gap-2">
+              <i class="fa-regular fa-clock"></i> <span id="g1-timer">90s</span>
+            </div>
+            <button onclick="quitGame()" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 bg-slate-800 rounded-lg">Salir</button>
+          </div>
+        </div>
+
+        <!-- Grid de cartas -->
+        <div id="g1-board" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <!-- Dinámico -->
+        </div>
+      </div>
+
+      <!-- JUEGO 2: VERDADERO O FALSO -->
+      <div id="game2-screen" class="hidden space-y-6 max-w-2xl mx-auto">
+        <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+          <span class="text-xs font-bold px-3 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full">
+            Verdadero o Falso
+          </span>
+          <span id="g2-progress" class="text-sm text-slate-300 font-semibold">Pregunta 1 de 15</span>
+          <button onclick="quitGame()" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 bg-slate-800 rounded-lg">Salir</button>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6 text-center">
+          <span id="g2-concept-badge" class="px-3 py-1 rounded-full bg-slate-800 text-indigo-300 text-xs font-semibold border border-slate-700">Concepto</span>
+          <p id="g2-statement-text" class="text-xl font-bold text-white leading-relaxed my-6">
+            "Afirmación a validar..."
+          </p>
+
+          <div class="grid grid-cols-2 gap-4 pt-4">
+            <button onclick="answerGame2(true)" class="py-4 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/30 hover:border-emerald-500 font-extrabold text-lg rounded-2xl transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-circle-check"></i> VERDADERO
+            </button>
+            <button onclick="answerGame2(false)" class="py-4 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/30 hover:border-rose-500 font-extrabold text-lg rounded-2xl transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-circle-xmark"></i> FALSO
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- JUEGO 3: CONTRARRELOJ -->
+      <div id="game3-screen" class="hidden space-y-6 max-w-2xl mx-auto">
+        <div class="flex items-center justify-between bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-bold px-3 py-1 bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-full">
+              Contrarreloj
+            </span>
+            <span class="text-sm text-slate-300">Puntos: <strong id="g3-score" class="text-emerald-400">0</strong></span>
+          </div>
+          <div class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-4 py-1.5 rounded-xl font-mono text-lg font-bold flex items-center gap-2">
+            <i class="fa-solid fa-stopwatch animate-pulse"></i> <span id="g3-timer">45s</span>
+          </div>
+          <button onclick="quitGame()" class="text-xs text-slate-400 hover:text-white px-3 py-1.5 bg-slate-800 rounded-lg">Salir</button>
+        </div>
+
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-slate-800 space-y-6">
+          <h4 id="g3-question-text" class="text-lg font-bold text-white leading-relaxed">
+            Pregunta contrarreloj...
+          </h4>
+
+          <div id="g3-options-container" class="space-y-3">
+            <!-- Dinámico -->
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTADOS DE MINIJUEGOS -->
+      <div id="game-results-screen" class="hidden max-w-3xl mx-auto space-y-6">
+        <div class="glass-card rounded-3xl p-8 border border-slate-800 text-center space-y-6">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-3xl">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-white">¡Juego Terminado!</h3>
+            <p id="game-results-summary" class="text-slate-400 text-sm mt-1">Resumen de tu rendimiento.</p>
+          </div>
+
+          <div class="flex justify-center gap-4">
+            <button onclick="quitGame()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all">
+              Menú de Juegos
+            </button>
+          </div>
+        </div>
+
+        <!-- Desglose de Errores/Aciertos del Juego -->
+        <div class="space-y-4">
+          <h4 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-emerald-400"></i> Registro de Respuestas del Juego
+          </h4>
+          <div id="game-breakdown-container" class="space-y-3">
+            <!-- Dinámico -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 4: RESUMEN INTEGRAL COMPLETO -->
+    <section id="sec-resumen" class="tab-content space-y-6">
+      <!-- Header y Buscador -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800">
+        <div>
+          <h2 class="text-2xl font-extrabold text-white flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-sky-400"></i> Compendio Conceptual Integral
+          </h2>
+          <p class="text-slate-400 text-sm mt-1">Todos los 61 conceptos de los dos compendios, fórmulas matemáticas y tabla de políticas públicas.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-3">
+          <!-- Buscador -->
+          <div class="relative w-full sm:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+            <input type="text" id="summary-search" oninput="filterSummary()" placeholder="Buscar concepto o palabra..." class="w-full bg-slate-800 text-slate-200 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 placeholder-slate-500">
+          </div>
+
+          <!-- Filtro de Sección -->
+          <select id="summary-section-filter" onchange="filterSummary()" class="w-full sm:w-auto bg-slate-800 text-slate-200 border border-slate-700 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+            <option value="ALL">Todas las Secciones (7)</option>
+            <option value="1">I. Crecimiento del Dinero e Inflación</option>
+            <option value="2">II. Política Fiscal y Finanzas Públicas</option>
+            <option value="3">III. Economía Abierta</option>
+            <option value="4">IV. Comercio Internacional</option>
+            <option value="5">V. Globalización Económica</option>
+            <option value="6">VI. Política Económica Global</option>
+            <option value="7">VII. Integración Económica</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Contenedor del Resumen Organizado -->
+      <div id="summary-accordion-container" class="space-y-6">
+        <!-- Renderizado dinámico de las 7 secciones -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- LÓGICA DE JAVASCRIPT Y BANCO DE DATOS EXACTO -->
+  <script>
+    // BANCO DE DATOS DE LOS 61 CONCEPTOS EXACTOS DE AMBOS PDFS
+    const CONCEPTS = [
+      // SECCIÓN I: Crecimiento del Dinero e Inflación (15 conceptos)
+      {
+        id: 1,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Inflación y Deflación",
+        def: "La inflación es el incremento sostenido y generalizado en el nivel general de precios de una economía a lo largo del tiempo, lo que implica una pérdida continua del poder adquisitivo de la moneda. La deflación es el fenómeno inverso: una disminución generalizada del nivel de precios.",
+        extra: "Variación sostenida del IPC o deflactor del PIB.",
+        falseStmt: "La deflación es el incremento acelerado en el nivel general de precios que aumenta el poder adquisitivo de los consumidores."
+      },
+      {
+        id: 2,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Hiperinflación",
+        def: "Episodio de inflación extraordinariamente elevada y fuera de control (definida típicamente como tasas superiores al 50% mensual), originada casi invariablemente por un crecimiento excesivo en la oferta de dinero cuando el gobierno recurre a la emisión monetaria para financiar elevados déficits fiscales.",
+        extra: "Tasa > 50% mensual. Causa principal: Financiamiento monetario del déficit fiscal.",
+        falseStmt: "La hiperinflación es un periodo de caída prolongada de precios causada por la falta de dinero circulante."
+      },
+      {
+        id: 3,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Nivel General de Precios (P) y Valor del Dinero (1/P)",
+        def: "El nivel de precios (P) mide el costo monetario de una canasta representativa de bienes y servicios. Su recíproco, 1/P, representa el valor del dinero medido en términos de bienes: la cantidad de bienes y servicios que puede comprarse con una unidad monetaria. Cuando P sube, el valor del dinero disminuye.",
+        extra: "Fórmula: Valor del Dinero = 1 / P",
+        falseStmt: "Cuando el nivel general de precios (P) sube, el valor del dinero (1/P) aumenta en la misma proporción."
+      },
+      {
+        id: 4,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Oferta Monetaria y Demanda de Dinero",
+        def: "La oferta monetaria es la cantidad total de dinero disponible en la economía, controlada por el banco central mediante instrumentos como las operaciones de mercado abierto. La demanda de dinero refleja cuánta riqueza desean mantener los individuos en forma líquida; depende principalmente del nivel de precios: a mayor nivel de precios, se requiere más dinero para realizar las mismas transacciones.",
+        extra: "Oferta = M (Banco Central). Demanda = f(P, Y, r).",
+        falseStmt: "La oferta monetaria es determinada por las decisiones individuales de consumo de los hogares en los supermercados."
+      },
+      {
+        id: 5,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Teoría Cuantitativa del Dinero",
+        def: "Teoría clásica según la cual la cantidad de dinero disponible en una economía determina el nivel general de precios, y la tasa de crecimiento de la oferta monetaria determina la tasa de inflación a largo plazo.",
+        extra: "Principio clásico: M determina P a largo plazo.",
+        falseStmt: "La Teoría Cuantitativa del Dinero sostiene que la oferta de dinero no guarda ninguna relación con la tasa de inflación a largo plazo."
+      },
+      {
+        id: 6,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Variables Nominales y Variables Reales",
+        def: "Las variables nominales son aquellas expresadas en unidades monetarias corrientes (por ejemplo, el PIB nominal o el salario en pesos). Las variables reales son aquellas expresadas en unidades físicas o ajustadas por la inflación, reflejando el verdadero poder adquisitivo o volumen de producción (por ejemplo, el PIB real o el salario real).",
+        extra: "Nominal = En dinero corriente. Real = Ajustado por inflación.",
+        falseStmt: "Las variables reales se expresan en dinero corriente y no consideran el ajuste por inflación."
+      },
+      {
+        id: 7,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Dicotomía Clásica",
+        def: "Separación teórica entre variables reales y variables nominales propuesta por los economistas clásicos. Sostiene que distintas fuerzas determinan ambos grupos: las variables reales responden a factores productivos y tecnológicos, mientras que las nominales dependen del sistema monetario.",
+        extra: "Separación: Reales (tecnología, recursos) vs Nominales (sistema monetario).",
+        falseStmt: "La dicotomía clásica demuestra que las variables nominales y reales están fusionadas y responden siempre a los mismos factores tecnológicos."
+      },
+      {
+        id: 8,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Neutralidad Monetaria",
+        def: "Proposición teórica que afirma que los cambios en la oferta de dinero afectan únicamente a las variables nominales (precios, salarios nominales, tipos de cambio nominales) pero no ejercen efecto alguno sobre las variables reales (producción, empleo, tasas de interés reales) en el largo plazo.",
+        extra: "Largo plazo: ΔM altera P, pero no afecta Y ni empleo.",
+        falseStmt: "La neutralidad monetaria indica que aumentar la emisión monetaria incrementa la producción real y el empleo de forma permanente a largo plazo."
+      },
+      {
+        id: 9,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Velocidad del Dinero (V) y Ecuación Cuantitativa",
+        def: "La velocidad del dinero es la rapidez con la que una unidad monetaria cambia de manos en la economía durante un periodo determinado (V = (P × Y) / M). La ecuación cuantitativa es la identidad contable M × V = P × Y, que vincula la masa monetaria (M) y su velocidad (V) con el valor nominal de la producción (P × Y). Si V es estable y Y está fija por la capacidad productiva, cualquier variación porcentual en M se traduce proporcionalmente en P.",
+        extra: "Fórmula: M × V = P × Y",
+        falseStmt: "La ecuación cuantitativa establece que M × P = V × Y, por lo que la velocidad del dinero es inversamente proporcional a la producción real."
+      },
+      {
+        id: 10,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Impuesto Inflacionario",
+        def: "Ingreso real que recaba el gobierno cuando crea dinero para financiar su gasto público. Al imprimir moneda y aumentar los precios, el Estado reduce el valor real del efectivo en manos del público, actuando como un gravamen implícito sobre quienes mantienen dinero líquido.",
+        extra: "Transferencia implícita de riqueza del público al Estado mediante emisión.",
+        falseStmt: "El impuesto inflacionario es un tributo formal que aprueba el congreso y se cobra directamente en la declaración anual de impuestos sobre la renta."
+      },
+      {
+        id: 11,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Efecto Fisher",
+        def: "Ajuste directo de uno a uno de la tasa de interés nominal ante variaciones en la tasa de inflación esperada, manteniendo constante la tasa de interés real en el largo plazo. Se expresa mediante la relación i = r + π (tasa nominal igual a tasa real más inflación).",
+        extra: "Fórmula: i = r + π",
+        falseStmt: "El efecto Fisher establece que cuando la inflación aumenta, la tasa de interés nominal disminuye en la misma proporción."
+      },
+      {
+        id: 12,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Falacia de la Inflación",
+        def: "Creencia errónea de que la inflación reduce directamente el poder adquisitivo real de los trabajadores. En realidad, cuando suben los precios de los bienes, también aumentan los ingresos nominales de vendedores y trabajadores en la misma proporción, por lo que el ingreso real permanece inalterado ante cambios puramente monetarios.",
+        extra: "Mito: 'La inflación empobrece automáticamente a todos', ignorando el ajuste de ingresos nominales.",
+        falseStmt: "La falacia de la inflación consiste en creer que la emisión de dinero genera aumentos generalizados de precios."
+      },
+      {
+        id: 13,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Costos de Suelas de Zapatos y Costos de Menú",
+        def: "Los costos de suelas de zapatos son los recursos (tiempo, esfuerzo y costos de transacción) que las personas desperdician al acudir con mayor frecuencia a las instituciones financieras para minimizar sus tenencias de efectivo y evitar que la inflación erosione su valor. Los costos de menú son los gastos en que incurren las empresas para modificar, imprimir y comunicar constantemente sus listas de precios ante una inflación elevada.",
+        extra: "Suelas = transacciones bancarias. Menú = cambiar/imprimir listas de precios.",
+        falseStmt: "Los costos de menú se refieren al gasto de comprar alimentos en restaurantes cuando la tasa de desempleo aumenta."
+      },
+      {
+        id: 14,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Variabilidad de los Precios Relativos y Distorsiones Fiscales",
+        def: "Dado que las empresas ajustan precios en distintos momentos, la inflación distorsiona los precios relativos, alterando las señales del mercado y provocando una asignación ineficiente de los recursos. Asimismo, genera distorsiones fiscales porque el sistema tributario suele gravar las ganancias de capital y los intereses nominales sin descontar la inflación, elevando la carga impositiva real y desincentivando el ahorro.",
+        extra: "Distorsión de precios -> mala asignación. Distorsión fiscal -> gravamen sobre ganancias nominales desincentiva el ahorro.",
+        falseStmt: "La inflación constante corrige las distorsiones del sistema tributario y perfecciona las señales de precios en el mercado."
+      },
+      {
+        id: 15,
+        sec: 1,
+        secTitle: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)",
+        title: "Redistribución Arbitraria de la Riqueza",
+        def: "Efecto producido por la inflación inesperada sobre contratos denominados en unidades monetarias: si la inflación resulta mayor a la prevista, beneficia a los deudores (que pagan sus préstamos con dinero de menor valor real) y perjudica a los acreedores; si es menor a la esperada, ocurre lo contrario.",
+        extra: "Inflación inesperada > prevista: beneficia deudores / perjudica acreedores.",
+        falseStmt: "Una inflación inesperadamente alta beneficia siempre a los acreedores ya que cobran tasas de interés reales más elevadas."
+      },
+
+      // SECCIÓN II: Política Fiscal, Finanzas Públicas y Estabilización (13 conceptos)
+      {
+        id: 16,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Finanzas Públicas",
+        def: "Disciplina que estudia cómo el Estado obtiene recursos financieros (principalmente mediante tributos, derechos y endeudamiento) y cómo los asigna a través del gasto público para cumplir con sus funciones económicas y sociales.",
+        extra: "Estudio de la recaudación (ingresos) y la asignación estatal (gasto).",
+        falseStmt: "Las finanzas públicas estudian la contabilidad privada de los bancos comerciales y la gestión de fondos de inversión."
+      },
+      {
+        id: 17,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Funciones Económicas del Estado",
+        def: "Según la teoría de las finanzas públicas, la intervención estatal persigue tres objetivos centrales: eficiencia económica (corregir fallas de mercado como monopolios, externalidades y provisión de bienes públicos), equidad (redistribuir el ingreso mediante impuestos progresivos y transferencias) y estabilidad macroeconómica (suavizar el ciclo económico, fomentar el empleo y controlar la inflación).",
+        extra: "3 pilares: Eficiencia, Equidad y Estabilidad macroeconómica.",
+        falseStmt: "La única función económica del Estado según las finanzas públicas es fijar los precios de todos los productos de consumo masivo."
+      },
+      {
+        id: 18,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Política Fiscal (Expansiva y Restrictiva)",
+        def: "Uso deliberado del gasto público y de la recaudación tributaria por parte del gobierno para influir en la demanda agregada y el nivel de actividad económica. La política fiscal expansiva incrementa el gasto público o reduce los impuestos para estimular la economía durante recesiones; la política fiscal restrictiva recorta el gasto o eleva impuestos para frenar el sobrecalentamiento y las presiones inflacionarias.",
+        extra: "Expansiva: +G ó -T (recesión). Restrictiva: -G ó +T (sobrecalentamiento/inflación).",
+        falseStmt: "La política fiscal expansiva consiste en recortar el gasto público e incrementar los impuestos para controlar la recesión."
+      },
+      {
+        id: 19,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Propensión Marginal a Consumir (PMC) y Multiplicador Keynesiano",
+        def: "La PMC es la fracción de cada unidad monetaria adicional de ingreso disponible que los hogares destinan al consumo en lugar del ahorro. El multiplicador del gasto público mide el incremento total en la producción agregada resultante de cada peso adicional de gasto estatal, calculado como k = 1 / (1 - PMC).",
+        extra: "Fórmula: Multiplicador k = 1 / (1 - PMC)",
+        falseStmt: "El multiplicador keynesiano se calcula como k = 1 - PMC y mide la caída en el empleo cuando se elevan los impuestos."
+      },
+      {
+        id: 20,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Ingresos Públicos: Tributarios y No Tributarios",
+        def: "Los ingresos tributarios provienen de la potestad coactiva del Estado e incluyen impuestos (como el ISR y el IVA), aportaciones de seguridad social, contribuciones de mejoras y derechos por el uso de bienes o servicios públicos. Los ingresos no tributarios derivan de actividades patrimoniales o empresariales del Estado, como productos, aprovechamientos e ingresos de organismos y empresas paraestatales.",
+        extra: "Tributarios = Impuestos, derechos, aportaciones coactivas. No tributarios = Paraestatales, productos, aprovechamientos.",
+        falseStmt: "Los ingresos tributarios son aquellos generados por la venta de petróleo de las empresas del Estado y sus productos patrimoniales."
+      },
+      {
+        id: 21,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Impuestos Directos e Indirectos",
+        def: "Los impuestos directos gravan de manera inmediata la capacidad económica, el ingreso o el patrimonio de las personas físicas y morales (ejemplo: Impuesto Sobre la Renta, ISR). Los impuestos indirectos gravan el consumo, la producción o las transacciones de bienes y servicios, trasladándose en el precio final al consumidor (ejemplo: Impuesto al Valor Agregado, IVA, e IEPS).",
+        extra: "Directos = Ingreso/patrimonio (ISR). Indirectos = Consumo/transacción (IVA, IEPS).",
+        falseStmt: "El Impuesto al Valor Agregado (IVA) es un impuesto directo que grava de forma inmediata las ganancias anuales de las corporaciones."
+      },
+      {
+        id: 22,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Incidencia Fiscal y Elasticidad",
+        def: "La incidencia fiscal determina cómo se distribuye efectivamente la carga económica de un impuesto entre compradores y vendedores, independientemente de sobre quién recaiga la obligación legal de pagarlo. La carga recae en mayor proporción sobre el lado más inelástico del mercado (quien tiene menor capacidad de reducir su cantidad comprada o vendida ante cambios en el precio).",
+        extra: "Carga fiscal -> recae sobre el lado con menor elasticidad (más inelástico).",
+        falseStmt: "La incidencia fiscal establece que el impuesto siempre es pagado en su totalidad por quien tiene la obligación legal formal ante la hacienda pública."
+      },
+      {
+        id: 23,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Gasto Público: Corriente y de Capital",
+        def: "El gasto corriente cubre las erogaciones destinadas a la operación cotidiana del aparato gubernamental (sueldos, salarios, materiales, suministros y transferencias asistenciales). El gasto de capital (o inversión física y financiera) se destina a la creación o ampliación de infraestructura pública (carreteras, hospitales, escuelas) que incrementa la capacidad productiva futura del país.",
+        extra: "Corriente = Operación cotidiana / sueldos. Capital = Infraestructura / inversión productiva futura.",
+        falseStmt: "El gasto de capital incluye exclusivamente el pago de nómina y los útiles de oficina consumidos a diario por las dependencias públicas."
+      },
+      {
+        id: 24,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Ciclo Presupuestario",
+        def: "Conjunto de fases periódicas mediante las cuales se formula, aprueba, ejecuta y evalúa el presupuesto público: planeación, programación, presupuestación, ejercicio y control, seguimiento, evaluación y rendición de cuentas.",
+        extra: "Etapas: Planeación -> Programación -> Presupuestación -> Ejercicio -> Evaluación.",
+        falseStmt: "El ciclo presupuestario consiste únicamente en la emisión rápida de deuda externa sin fiscalización ni rendición de cuentas."
+      },
+      {
+        id: 25,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Balance Fiscal: Superávit, Déficit y Equilibrio",
+        def: "Resultado de comparar los ingresos públicos totales contra el gasto público total en un ejercicio fiscal. Existe superávit fiscal cuando los ingresos superan a los gastos; déficit fiscal cuando los gastos exceden a los ingresos (requiriendo financiamiento); y equilibrio presupuestario cuando ambos montos coinciden.",
+        extra: "Superávit: Ingresos > Gastos. Déficit: Gastos > Ingresos. Equilibrio: Ingresos = Gastos.",
+        falseStmt: "Un déficit fiscal ocurre cuando la recaudación tributaria sobrepasa ampliamente las erogaciones totales del gobierno."
+      },
+      {
+        id: 26,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Deuda Pública (Interna y Externa) y Efecto Desplazamiento (Crowding Out)",
+        def: "La deuda pública es el acervo total de obligaciones financieras contraídas por el Estado (interna si se emite en moneda nacional con acreedores residentes, y externa si se contrata en divisas con acreedores extranjeros). El efecto desplazamiento ocurre cuando el endeudamiento excesivo del gobierno absorbe el ahorro disponible y eleva las tasas de interés, reduciendo la inversión privada.",
+        extra: "Crowding Out: Endeudamiento estatal -> + Tasa de interés -> - Inversión privada.",
+        falseStmt: "El efecto desplazamiento (Crowding Out) se produce cuando el ahorro público reduce las tasas de interés, estimulando masivamente la inversión privada."
+      },
+      {
+        id: 27,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Estanflación y Choques Externos",
+        def: "La estanflación es la coexistencia simultánea de estancamiento económico (bajo crecimiento y alto desempleo) con elevada inflación, generalmente provocada por choques de oferta adversos o choques externos (como alzas abruptas en los precios internacionales de la energía o interrupciones en las cadenas de suministro).",
+        extra: "Estanflación = Bajo Crecimiento + Alto Desempleo + Alta Inflación (choque de oferta).",
+        falseStmt: "La estanflación es un periodo caracterizado por un crecimiento acelerado del PIB, pleno empleo e inflación cero."
+      },
+      {
+        id: 28,
+        sec: 2,
+        secTitle: "II. Política Fiscal, Finanzas Públicas y Estabilización",
+        title: "Instrumentos y Regímenes de Política Fiscal (Tabla de Instrumentos)",
+        def: "Matriz funcional de la política fiscal:\n• Política Fiscal Expansiva: Aumento del gasto público y/o reducción de tasas impositivas. Objetivo: Impulsar la demanda agregada, reducir el desempleo y salir de una recesión.\n• Política Fiscal Restrictiva: Recorte del gasto gubernamental y/o incremento de impuestos. Objetivo: Moderar el consumo agregado, reducir el déficit público y contener la inflación.\n• Estabilizadores Automáticos: Impuestos progresivos y seguros de desempleo que actúan sin nuevas leyes. Objetivo: Amortiguar de forma automática las fluctuaciones del ciclo económico.",
+        extra: "Cuadro comparativo: Expansiva vs Restrictiva vs Estabilizadores Automáticos.",
+        falseStmt: "Los estabilizadores automáticos requieren la promulgación de nuevas leyes en el congreso cada vez que cambia el ciclo económico."
+      },
+
+      // SECCIÓN III: Macroeconomía de una Economía Abierta (9 conceptos)
+      {
+        id: 29,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Economía Cerrada vs. Economía Abierta",
+        def: "Una economía cerrada no interactúa con el resto del mundo en mercados de bienes ni financieros. Una economía abierta participa libremente en el comercio internacional de bienes y servicios y en los mercados financieros globales.",
+        extra: "Cerrada: Sin comercio exterior ni flujos financieros. Abierta: Interacción internacional libre.",
+        falseStmt: "Una economía cerrada participa intensamente en los mercados financieros internacionales sin restricciones comerciales."
+      },
+      {
+        id: 30,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Exportaciones, Importaciones y Exportaciones Netas (XN)",
+        def: "Las exportaciones son bienes y servicios producidos internamente y vendidos en el extranjero; las importaciones son bienes y servicios producidos en el extranjero y adquiridos internamente. Las exportaciones netas (o balanza comercial) representan su diferencia: XN = Exportaciones - Importaciones.",
+        extra: "Fórmula: XN = Exportaciones - Importaciones",
+        falseStmt: "Las exportaciones netas se obtienen sumando las importaciones totales más los ingresos del turismo local."
+      },
+      {
+        id: 31,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Superávit Comercial, Déficit Comercial y Comercio Equilibrado",
+        def: "Se presenta un superávit comercial cuando las exportaciones superan a las importaciones (XN > 0); un déficit comercial cuando las importaciones superan a las exportaciones (XN < 0); y comercio equilibrado cuando exportaciones e importaciones son iguales (XN = 0).",
+        extra: "Superávit: XN > 0. Déficit: XN < 0. Equilibrado: XN = 0.",
+        falseStmt: "Existe superávit comercial cuando las importaciones superan ampliamente a las exportaciones (XN < 0)."
+      },
+      {
+        id: 32,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Flujo Neto de Salida de Capital (NCO)",
+        def: "Diferencia entre la compra de activos extranjeros por parte de residentes nacionales y la compra de activos nacionales por parte de extranjeros (NCO = Compra de activos extranjeros - Compra de activos nacionales). Incluye tanto la inversión extranjera directa (gestión activa) como la inversión extranjera de cartera (compra de acciones y bonos).",
+        extra: "Fórmula: NCO = Activos extranjeros comprados - Activos nacionales vendidos a extranjeros.",
+        falseStmt: "El NCO mide exclusivamente las exportaciones agrícolas de un país hacia socios del tratado comercial."
+      },
+      {
+        id: 33,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Igualdad Contable entre Flujos Comerciales y Financieros",
+        def: "Identidad macroeconómica fundamental que establece que el flujo neto de salida de capital siempre equivale exactamente a las exportaciones netas: NCO = XN. Toda transacción comercial internacional tiene una contrapartida financiera equivalente en los flujos de capital.",
+        extra: "Identidad: NCO = XN",
+        falseStmt: "La identidad fundamental de economía abierta demuestra que NCO y XN jamás pueden ser iguales en la balanza de pagos."
+      },
+      {
+        id: 34,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Ahorro Nacional, Inversión Interna y Salida Neta de Capital",
+        def: "En una economía abierta, el ahorro nacional (S) se destina tanto a financiar la inversión física interna (I) como a adquirir activos en el exterior (NCO): S = I + NCO. Cuando un país ahorra menos de lo que invierte (S < I), presenta un flujo neto de entrada de capitales (NCO < 0) y, necesariamente, un déficit comercial (XN < 0).",
+        extra: "Fórmula: S = I + NCO. Si S < I => NCO < 0 y XN < 0.",
+        falseStmt: "Cuando el ahorro nacional es menor que la inversión interna (S < I), la balanza comercial registra de inmediato un gran superávit."
+      },
+      {
+        id: 35,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Tipo de Cambio Nominal (e), Apreciación y Depreciación",
+        def: "El tipo de cambio nominal es la relación a la cual una persona puede intercambiar la moneda de un país por la de otro. La apreciación es el aumento en el valor de una moneda medido por la cantidad de divisa extranjera que puede comprar; la depreciación es la disminución en su valor relativo.",
+        extra: "e = tasa de cambio monetaria. Apreciación = +valor. Depreciación = -valor.",
+        falseStmt: "La depreciación de una moneda ocurre cuando esta aumenta su valor y puede comprar una mayor cantidad de divisas extranjeras."
+      },
+      {
+        id: 36,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Tipo de Cambio Real",
+        def: "Relación a la cual una persona puede intercambiar los bienes y servicios de un país por los de otro. Se calcula como Tipo de cambio real = (e × P) / P*, donde e es el tipo de cambio nominal, P el índice de precios nacional y P* el índice de precios extranjero. Determina la competitividad precio de las exportaciones e importaciones.",
+        extra: "Fórmula: Tipo de Cambio Real = (e × P) / P*",
+        falseStmt: "El tipo de cambio real no depende de los precios nacionales ni extranjeros, solamente refleja la tasa fijada por el banco central."
+      },
+      {
+        id: 37,
+        sec: 3,
+        secTitle: "III. Macroeconomía de una Economía Abierta",
+        title: "Paridad del Poder de Compra (PPC) y Ley de un Solo Precio",
+        def: "La Paridad del Poder de Compra sostiene que una unidad de cualquier moneda debe tener el mismo poder adquisitivo en todos los países. Se sustenta en la ley de un solo precio (un bien idéntico debe venderse al mismo precio en distintos lugares mediante el arbitraje) e implica que el tipo de cambio nominal se ajusta a largo plazo para compensar los diferenciales de inflación entre naciones.",
+        extra: "Ley de un solo precio -> Arbitraje -> Ajuste de 'e' por diferencial de inflación.",
+        falseStmt: "La Paridad del Poder de Compra afirma que el arbitraje impide que las monedas tengan el mismo poder adquisitivo entre países."
+      },
+
+      // SECCIÓN IV: Comercio Internacional y Política Comercial (6 conceptos)
+      {
+        id: 38,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Precio Mundial y Ventaja Comparativa",
+        def: "El precio mundial es el precio de un bien que prevalece en el mercado internacional. Al compararlo con el precio nacional antes del comercio (que refleja el costo de oportunidad interno), se determina el patrón comercial: si el precio nacional es menor al precio mundial, el país posee ventaja comparativa y se convierte en exportador; si es mayor, se convierte en importador.",
+        extra: "P_nacional < P_mundial => Exportador. P_nacional > P_mundial => Importador.",
+        falseStmt: "Si el precio nacional antes del comercio es más alto que el precio mundial, el país tiene ventaja comparativa y exportará ese bien."
+      },
+      {
+        id: 39,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Excedente del Consumidor, del Productor y Excedente Total",
+        def: "El excedente del consumidor mide el beneficio neto que obtienen los compradores (disposición a pagar menos precio pagado). El excedente del productor mide el beneficio neto de los vendedores (precio recibido menos costo de producción). El excedente total es la suma de ambos y mide el bienestar económico global de la sociedad.",
+        extra: "Excedente Total = Excedente Consumidor + Excedente Productor.",
+        falseStmt: "El excedente del productor se calcula restando la disposición a pagar del consumidor menos el arancel cobrado por la aduana."
+      },
+      {
+        id: 40,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Ganancias y Pérdidas del Comercio Internacional",
+        def: "Cuando un país abre sus fronteras y exporta un bien, los productores nacionales ganan (venden a un precio mundial más alto) y los consumidores nacionales pierden (pagan un precio mayor), pero las ganancias de los productores superan las pérdidas de los consumidores, elevando el bienestar total. Cuando un país importa un bien, los consumidores ganan y los productores pierden, aumentando igualmente el excedente total neto.",
+        extra: "Apertura comercial -> Incremento neto del Excedente Total tanto al exportar como al importar.",
+        falseStmt: "El comercio internacional provoca pérdidas netas de bienestar global porque los consumidores siempre pierden en todas las industrias."
+      },
+      {
+        id: 41,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Arancel y Pérdida Irrecuperable de Eficiencia (Peso Muerto)",
+        def: "Un arancel es un impuesto aplicado a los bienes producidos en el extranjero y vendidos en el mercado interno. Eleva el precio doméstico por encima del precio mundial, reduce las importaciones, incrementa el excedente de los productores locales y genera recaudación fiscal, pero provoca una caída mayor en el excedente del consumidor, generando una pérdida irrecuperable de eficiencia por la distorsión en la producción y el consumo.",
+        extra: "Arancel -> +Precio local, -Importaciones, distorsión en asignación => Pérdida de Peso Muerto.",
+        falseStmt: "Un arancel incrementa la eficiencia económica total al eliminar la pérdida irrecuperable de peso muerto en el mercado."
+      },
+      {
+        id: 42,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Beneficios Dinámicos del Libre Comercio",
+        def: "Más allá del aumento estático en el excedente total, el comercio internacional aporta mayor variedad de bienes a los consumidores, permite aprovechar economías de escala al acceder a mercados globales, intensifica la competencia (reduciendo el poder monopólico local) y acelera la transferencia de tecnología y conocimientos.",
+        extra: "Beneficios: +Variedad, economías de escala, +competencia, transferencia tecnológica.",
+        falseStmt: "El libre comercio perjudica los procesos tecnológicos al impedir el intercambio de ideas y conocimiento entre países."
+      },
+      {
+        id: 43,
+        sec: 4,
+        secTitle: "IV. Comercio Internacional y Política Comercial",
+        title: "Argumentos Proteccionistas y Acuerdos Multilaterales",
+        def: "Las restricciones comerciales suelen justificarse bajo argumentos como la protección del empleo interno, la seguridad nacional, el resguardo de la industria incipiente, la defensa contra la competencia desleal (subsidios extranjeros) y el uso de aranceles como ficha de negociación. En contraparte, los tratados comerciales multilaterales (como el GATT y la OMC) y regionales (como el TLCAN / T-MEC) promueven la reducción recíproca de barreras para maximizar el bienestar global.",
+        extra: "Proteccionismo: empleo, industria incipiente, seguridad. Acuerdos: OMC, T-MEC reductores de barreras.",
+        falseStmt: "La Organización Mundial del Comercio (OMC) tiene como objetivo principal incentivar el aumento generalizado de aranceles punitivos."
+      },
+
+      // SECCIÓN V: Economía Global: Globalización (6 conceptos)
+      {
+        id: 44,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Globalización Económica",
+        def: "Proceso histórico de creciente integración e interdependencia de las economías nacionales mediante el flujo transfronterizo de bienes, servicios, capitales, tecnología e información.",
+        extra: "Integración e interdependencia creciente a nivel global.",
+        falseStmt: "La globalización económica es el aislamiento intencional de los mercados nacionales para erradicar el comercio exterior."
+      },
+      {
+        id: 45,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Cadenas Globales de Valor (CGV)",
+        def: "Fragmentación internacional de los procesos productivos, donde las distintas etapas de diseño, extracción, manufactura y ensamblaje de un bien se distribuyen en diferentes países según sus ventajas de costos y especialización.",
+        extra: "Fragmentación de la producción entre múltiples naciones según especialización.",
+        falseStmt: "Las cadenas globales de valor consisten en concentrar absolutamente todas las etapas de diseño y producción dentro de una sola ciudad."
+      },
+      {
+        id: 46,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Inversión Extranjera Directa (IED)",
+        def: "Colocación de capitales a largo plazo por parte de una empresa o inversor en otro país para adquirir activos productivos, establecer filiales o controlar operaciones comerciales de manera permanente.",
+        extra: "Capitales de largo plazo en activos productivos permanentes en el extranjero.",
+        falseStmt: "La Inversión Extranjera Directa consiste en la especulación diaria de divisas en mercados bursátiles sin adquirir activos productivos."
+      },
+      {
+        id: 47,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Interdependencia Económica",
+        def: "Situación en la que el desempeño económico, la estabilidad financiera y el bienestar de un país dependen directamente de las condiciones, políticas y crisis ocurridas en otras naciones.",
+        extra: "Vínculo directo entre la estabilidad propia y los eventos económicos de otros países.",
+        falseStmt: "La interdependencia económica describe la autosuficiencia total de una nación que no se ve afectada por choques externos."
+      },
+      {
+        id: 48,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Deslocalización (Offshoring)",
+        def: "Traslado de actividades productivas o de servicios de una empresa hacia países extranjeros con el objetivo de reducir costos laborales, fiscales o logísticos.",
+        extra: "Reubicación de procesos productivos a otros países para optimizar costos.",
+        falseStmt: "La deslocalización es la prohibición legal impuesta a las empresas para instalar fábricas fuera del territorio nacional."
+      },
+      {
+        id: 49,
+        sec: 5,
+        secTitle: "V. Economía Global: Globalización",
+        title: "Ventaja Comparativa (Economía Global)",
+        def: "Principio comercial según el cual cada país tiende a especializarse en la producción y exportación de aquellos bienes y servicios que puede producir con un costo de oportunidad relativamente menor respecto a sus socios comerciales.",
+        extra: "Especialización basada en el menor costo de oportunidad relativo.",
+        falseStmt: "Un país tiene ventaja comparativa en un bien cuando su costo de oportunidad para producirlo es infinitamente superior al de sus vecinos."
+      },
+
+      // SECCIÓN VI: Economía Global: Política Económica Global (6 conceptos)
+      {
+        id: 50,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Gobernanza Económica Global",
+        def: "Conjunto de normas, acuerdos internacionales e instituciones multilaterales que regulan y coordinan las relaciones comerciales, monetarias y financieras entre los Estados.",
+        extra: "Marco regulatorio e institucional internacional entre Estados.",
+        falseStmt: "La gobernanza económica global hace referencia a las ordenanzas municipales creadas para regular el comercio informal en una ciudad."
+      },
+      {
+        id: 51,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Multilateralismo",
+        def: "Enfoque de cooperación internacional en el que tres o más países acuerdan reglas comunes y resuelven disputas comerciales o financieras de manera conjunta a través de organismos internacionales.",
+        extra: "Coordinación de 3 o más países bajo reglas e instituciones comunes.",
+        falseStmt: "El multilateralismo es la decisión unilateral de una sola nación de imponer sanciones y cuotas a todos sus vecinos."
+      },
+      {
+        id: 52,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Proteccionismo Comercial",
+        def: "Conjunto de medidas gubernamentales destinadas a restringir las importaciones y proteger la industria nacional frente a la competencia extranjera mediante aranceles, cuotas o barreras no arancelarias.",
+        extra: "Restricción a importaciones (+aranceles, +cuotas) para resguardar la industria local.",
+        falseStmt: "El proteccionismo comercial promueve la eliminación total de aduanas y la libertad absoluta de importación sin aranceles."
+      },
+      {
+        id: 53,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Libre Comercio",
+        def: "Modelo de política comercial que promueve el intercambio internacional de mercancías y servicios sin restricciones gubernamentales, aranceles ni subsidios que distorsionen los precios del mercado.",
+        extra: "Intercambio libre sin aranceles, cuotas o subsidios distorsionantes.",
+        falseStmt: "El libre comercio exige que el Estado fije precios máximos a las importaciones y subsidie masivamente la producción local."
+      },
+      {
+        id: 54,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Coordinación Macroeconómica",
+        def: "Alineación deliberada de las políticas fiscales y monetarias entre las principales economías del mundo para estabilizar los tipos de cambio, controlar la inflación global y mitigar recesiones sistémicas.",
+        extra: "Alineación internacional de políticas fiscal/monetaria contra crisis sistémicas.",
+        falseStmt: "La coordinación macroeconómica promueve guerras de divisas desreguladas e intencionadas entre los bancos centrales."
+      },
+      {
+        id: 55,
+        sec: 6,
+        secTitle: "VI. Economía Global: Política Económica Global",
+        title: "Organismos Financieros Internacionales",
+        def: "Instituciones supranacionales (como el FMI, el Banco Mundial y la OMC) encargadas de supervisar la estabilidad financiera, financiar el desarrollo y administrar las reglas del comercio mundial.",
+        extra: "Instituciones supranacionales: FMI, Banco Mundial, OMC.",
+        falseStmt: "Los organismos financieros internacionales son cooperativas locales privadas de ahorro sin proyección internacional."
+      },
+
+      // SECCIÓN VII: Economía Global: Integración Económica (6 conceptos)
+      {
+        id: 56,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Integración Económica",
+        def: "Proceso mediante el cual dos o más países eliminan progresivamente las barreras económicas y comerciales entre sí para conformar un espacio económico unificado.",
+        extra: "Eliminación progresiva de barreras para crear un espacio unificado.",
+        falseStmt: "La integración económica es el restablecimiento de fronteras militares y barreras comerciales entre países vecinos."
+      },
+      {
+        id: 57,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Zona de Libre Comercio",
+        def: "Acuerdo entre países que elimina los aranceles y restricciones cuantitativas al comercio recíproco, pero en el que cada miembro conserva su propia política arancelaria frente a terceros países.",
+        extra: "Cero aranceles internos; política arancelaria individual frente a terceros.",
+        falseStmt: "En una zona de libre comercio, los países miembros adoptan un arancel externo único e idéntico frente a todas las demás naciones."
+      },
+      {
+        id: 58,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Unión Aduanera",
+        def: "Nivel de integración que, además de eliminar los aranceles internos entre los países miembros, establece un Arancel Externo Común (AEC) aplicable a las importaciones provenientes del resto del mundo.",
+        extra: "Cero aranceles internos + Arancel Externo Común (AEC).",
+        falseStmt: "Una unión aduanera prohíbe el comercio de bienes entre sus miembros e impone aranceles internos variables."
+      },
+      {
+        id: 59,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Mercado Común",
+        def: "Bloque económico que integra una unión aduanera con la libre circulación de los factores de producción (capital y mano de obra) entre los territorios de los países participantes.",
+        extra: "Unión aduanera + libre movilidad de capital y trabajo.",
+        falseStmt: "Un mercado común restringe severamente el movimiento de trabajadores y capitales entre los Estados miembros."
+      },
+      {
+        id: 60,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Unión Económica y Monetaria",
+        def: "Fase avanzada de integración que combina un mercado común con la armonización de políticas económicas, la adopción de una moneda única y una autoridad monetaria centralizada.",
+        extra: "Mercado común + armonización de políticas + moneda única (ej. Eurozona).",
+        falseStmt: "La unión económica y monetaria exige que cada municipio emita su propia moneda local sin banco central."
+      },
+      {
+        id: 61,
+        sec: 7,
+        secTitle: "VII. Economía Global: Integración Económica",
+        title: "Creación y Desviación de Comercio",
+        def: "Efectos de un bloque regional: la creación ocurre cuando el comercio se desplaza hacia productores miembros más eficientes; la desviación sucede cuando el arancel preferencial sustituye importaciones baratas de terceros países por producción interna más costosa.",
+        extra: "Creación = +eficiencia por apertura regional. Desviación = arancel desplaza a productores más eficientes externos.",
+        falseStmt: "La creación de comercio ocurre cuando un arancel obliga a comprar a productores menos eficientes y costosos."
+      }
+    ];
+
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    let currentTab = 'resumen';
+    
+    // Estado Flashcards
+    let currentFCList = [...CONCEPTS];
+    let currentFCIndex = 0;
+    let isFlipped = false;
+    let masteredCards = new Set();
+    let fcViewMode = 'single'; // 'single' o 'grid'
+
+    // Estado Exámenes
+    let currentExamQuestions = [];
+    let currentExamIndex = 0;
+    let userAnswers = {}; // { qIndex: selectedOptionIndex }
+    let examTotalQuestions = 15;
+
+    // Estado Minijuegos
+    let currentGame = 0;
+    let gameTimer = null;
+    let gameTimeLeft = 0;
+    // Juego 1 state
+    let g1Cards = [];
+    let g1Flipped = [];
+    let g1Matched = [];
+    let g1Attempts = 0;
+    let g1Failures = [];
+    // Juego 2 state
+    let g2Questions = [];
+    let g2Index = 0;
+    let g2Score = 0;
+    let g2UserAnswers = [];
+    // Juego 3 state
+    let g3Score = 0;
+    let g3Streak = 0;
+    let g3MaxStreak = 0;
+    let g3CurrentQ = null;
+    let g3History = [];
+
+    // INICIALIZACIÓN AL CARGAR LA PÁGINA
+    window.onload = function() {
+      renderSummary();
+      initFlashcards();
+      
+      // Event Listener para Espacio en Flashcards
+      document.addEventListener('keydown', function(e) {
+        if (currentTab === 'flashcards' && fcViewMode === 'single' && e.code === 'Space') {
+          e.preventDefault();
+          flipCurrentCard();
+        }
+      });
+    };
+
+    // CAMBIO DE SECCIONES (TABS)
+    function switchTab(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+
+      // Actualizar estilos botones nav
+      document.querySelectorAll('.nav-btn, .mob-nav-btn').forEach(btn => {
+        btn.classList.remove('text-white', 'bg-slate-800', 'text-indigo-400');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      const activeMobNav = document.getElementById(`mob-nav-${tabId}`);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-400');
+        activeNav.classList.add('text-white', 'bg-slate-800');
+      }
+      if (activeMobNav) {
+        activeMobNav.classList.remove('text-slate-400');
+        activeMobNav.classList.add('text-indigo-400');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // LÓGICA DE FICHAS DE ESTUDIO (FLASHCARDS)
+    // ==========================================
+    function initFlashcards() {
+      currentFCList = [...CONCEPTS];
+      currentFCIndex = 0;
+      updateFlashcardView();
+      renderGridFlashcards();
+    }
+
+    function filterFlashcards() {
+      const secVal = document.getElementById('flashcard-section-select').value;
+      if (secVal === 'ALL') {
+        currentFCList = [...CONCEPTS];
+      } else {
+        currentFCList = CONCEPTS.filter(c => c.sec === parseInt(secVal));
+      }
+      currentFCIndex = 0;
+      isFlipped = false;
+      document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+      updateFlashcardView();
+      renderGridFlashcards();
+    }
+
+    function setFlashcardMode(mode) {
+      fcViewMode = mode;
+      const singleBtn = document.getElementById('fc-mode-single');
+      const gridBtn = document.getElementById('fc-mode-grid');
+      const singleContainer = document.getElementById('fc-single-container');
+      const gridContainer = document.getElementById('fc-grid-container');
+
+      if (mode === 'single') {
+        singleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all";
+        gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+        singleContainer.classList.remove('hidden');
+        gridContainer.classList.add('hidden');
+      } else {
+        gridBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 text-white transition-all";
+        singleBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-white transition-all";
+        gridContainer.classList.remove('hidden');
+        singleContainer.classList.add('hidden');
+      }
+    }
+
+    function updateFlashcardView() {
+      if (currentFCList.length === 0) return;
+      const card = currentFCList[currentFCIndex];
+
+      document.getElementById('fc-counter').textContent = `Tarjeta ${currentFCIndex + 1} de ${currentFCList.length}`;
+      document.getElementById('fc-front-title').textContent = card.title;
+      document.getElementById('fc-front-section').textContent = `Sección ${card.sec}`;
+      document.getElementById('fc-front-id').textContent = `#${card.id}`;
+
+      document.getElementById('fc-back-title').textContent = card.title;
+      document.getElementById('fc-back-def').textContent = card.def;
+      document.getElementById('fc-back-section-name').textContent = card.secTitle.split('(')[0];
+
+      const extraEl = document.getElementById('fc-back-extra');
+      if (card.extra) {
+        extraEl.textContent = card.extra;
+        extraEl.classList.remove('hidden');
+      } else {
+        extraEl.classList.add('hidden');
+      }
+
+      // Estado dominada
+      const masteredBtn = document.getElementById('fc-mastered-btn');
+      if (masteredCards.has(card.id)) {
+        masteredBtn.className = "text-emerald-400 p-2 text-xl transition-colors";
+        masteredBtn.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+      } else {
+        masteredBtn.className = "text-slate-500 hover:text-emerald-400 p-2 text-xl transition-colors";
+        masteredBtn.innerHTML = '<i class="fa-regular fa-circle-check"></i>';
+      }
+
+      document.getElementById('fc-mastered-count').innerHTML = `<i class="fa-solid fa-check text-emerald-400 mr-1"></i> ${masteredCards.size} Dominadas`;
+    }
+
+    function flipCurrentCard() {
+      isFlipped = !isFlipped;
+      const inner = document.getElementById('flashcard-inner');
+      if (isFlipped) {
+        inner.classList.add('rotate-y-180');
+      } else {
+        inner.classList.remove('rotate-y-180');
+      }
+    }
+
+    function nextCard() {
+      isFlipped = false;
+      document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+      setTimeout(() => {
+        currentFCIndex = (currentFCIndex + 1) % currentFCList.length;
+        updateFlashcardView();
+      }, 150);
+    }
+
+    function prevCard() {
+      isFlipped = false;
+      document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+      setTimeout(() => {
+        currentFCIndex = (currentFCIndex - 1 + currentFCList.length) % currentFCList.length;
+        updateFlashcardView();
+      }, 150);
+    }
+
+    function shuffleCards() {
+      isFlipped = false;
+      document.getElementById('flashcard-inner').classList.remove('rotate-y-180');
+      setTimeout(() => {
+        for (let i = currentFCList.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [currentFCList[i], currentFCList[j]] = [currentFCList[j], currentFCList[i]];
+        }
+        currentFCIndex = 0;
+        updateFlashcardView();
+        renderGridFlashcards();
+      }, 150);
+    }
+
+    function toggleMastered(e) {
+      e.stopPropagation();
+      const card = currentFCList[currentFCIndex];
+      if (masteredCards.has(card.id)) {
+        masteredCards.delete(card.id);
+      } else {
+        masteredCards.add(card.id);
+      }
+      updateFlashcardView();
+    }
+
+    function renderGridFlashcards() {
+      const container = document.getElementById('fc-grid-container');
+      container.innerHTML = '';
+      currentFCList.forEach((c) => {
+        const item = document.createElement('div');
+        item.className = "glass-card p-5 rounded-2xl border border-slate-800 space-y-3 flex flex-col justify-between hover:border-indigo-500/40 transition-all";
+        item.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-2">
+              <span class="text-xs font-semibold text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">Sección ${c.sec}</span>
+              <span class="text-xs text-slate-500">#${c.id}</span>
+            </div>
+            <h4 class="font-bold text-white text-base leading-snug">${c.title}</h4>
+            <p class="text-slate-300 text-xs mt-2 line-clamp-3 leading-relaxed">${c.def}</p>
+          </div>
+          ${c.extra ? `<div class="text-xs text-indigo-300 bg-slate-900/60 p-2 rounded font-mono border border-slate-800/80">${c.extra}</div>` : ''}
+        `;
+        container.appendChild(item);
+      });
+    }
+
+
+    // ==========================================
+    // LÓGICA DE EXÁMENES DINÁMICOS
+    // ==========================================
+    function startExam(numQuestions) {
+      examTotalQuestions = numQuestions;
+      currentExamIndex = 0;
+      userAnswers = {};
+
+      // Generación aleatoria de preguntas basada en el banco de 61 conceptos
+      const shuffledConcepts = [...CONCEPTS].sort(() => 0.5 - Math.random());
+      const selectedConcepts = shuffledConcepts.slice(0, numQuestions);
+
+      currentExamQuestions = selectedConcepts.map(concept => {
+        // Generar 3 distractores aleatorios de otros conceptos
+        const distractors = CONCEPTS.filter(c => c.id !== concept.id)
+                                    .sort(() => 0.5 - Math.random())
+                                    .slice(0, 3)
+                                    .map(c => c.def);
+
+        const options = [concept.def, ...distractors].sort(() => 0.5 - Math.random());
+        const correctIndex = options.indexOf(concept.def);
+
+        return {
+          concept: concept,
+          questionText: `¿Cuál es la definición exacta del concepto "${concept.title}"?`,
+          options: options,
+          correctIndex: correctIndex
+        };
+      });
+
+      document.getElementById('exam-selection-screen').classList.add('hidden');
+      document.getElementById('exam-results-screen').classList.add('hidden');
+      document.getElementById('exam-active-screen').classList.remove('hidden');
+
+      renderExamQuestion();
+    }
+
+    function renderExamQuestion() {
+      const q = currentExamQuestions[currentExamIndex];
+
+      document.getElementById('exam-progress-text').textContent = `Pregunta ${currentExamIndex + 1} de ${examTotalQuestions}`;
+      document.getElementById('exam-progress-bar').style.width = `${((currentExamIndex + 1) / examTotalQuestions) * 100}%`;
+      document.getElementById('exam-badge').textContent = `Examen (${examTotalQuestions} Preguntas)`;
+
+      document.getElementById('exam-q-category').textContent = q.concept.secTitle;
+      document.getElementById('exam-q-text').textContent = q.questionText;
+
+      const optionsContainer = document.getElementById('exam-options-container');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach((opt, idx) => {
+        const isSelected = userAnswers[currentExamIndex] === idx;
+        const btn = document.createElement('button');
+        btn.onclick = () => selectExamOption(idx);
+        btn.className = `w-full text-left p-4 rounded-2xl border transition-all flex items-start gap-3 ${
+          isSelected 
+            ? 'bg-indigo-600/20 border-indigo-500 text-white shadow-md shadow-indigo-500/10' 
+            : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:bg-slate-800 hover:border-slate-700'
+        }`;
+        
+        btn.innerHTML = `
+          <span class="w-6 h-6 rounded-full flex items-center justify-center border text-xs font-bold shrink-0 mt-0.5 ${
+            isSelected ? 'bg-indigo-500 border-indigo-400 text-white' : 'border-slate-700 text-slate-400'
+          }">
+            ${String.fromCharCode(65 + idx)}
+          </span>
+          <span class="text-sm leading-relaxed">${opt}</span>
+        `;
+        optionsContainer.appendChild(btn);
+      });
+
+      // Visibilidad botones navegación
+      document.getElementById('exam-prev-btn').disabled = currentExamIndex === 0;
+      document.getElementById('exam-prev-btn').style.opacity = currentExamIndex === 0 ? '0.5' : '1';
+
+      if (currentExamIndex === examTotalQuestions - 1) {
+        document.getElementById('exam-next-btn').classList.add('hidden');
+        document.getElementById('exam-finish-btn').classList.remove('hidden');
+      } else {
+        document.getElementById('exam-next-btn').classList.remove('hidden');
+        document.getElementById('exam-finish-btn').classList.add('hidden');
+      }
+    }
+
+    function selectExamOption(idx) {
+      userAnswers[currentExamIndex] = idx;
+      renderExamQuestion();
+    }
+
+    function navigateExam(dir) {
+      currentExamIndex += dir;
+      renderExamQuestion();
+    }
+
+    function quitExam() {
+      document.getElementById('exam-active-screen').classList.add('hidden');
+      document.getElementById('exam-results-screen').classList.add('hidden');
+      document.getElementById('exam-selection-screen').classList.remove('hidden');
+    }
+
+    function finishExam() {
+      let correctCount = 0;
+      currentExamQuestions.forEach((q, idx) => {
+        if (userAnswers[idx] === q.correctIndex) {
+          correctCount++;
+        }
+      });
+
+      const pct = Math.round((correctCount / examTotalQuestions) * 100);
+      const incorrectCount = examTotalQuestions - correctCount;
+
+      document.getElementById('res-score-pct').textContent = `${pct}%`;
+      document.getElementById('res-score-correct').textContent = correctCount;
+      document.getElementById('res-score-incorrect').textContent = incorrectCount;
+
+      const subtitle = document.getElementById('exam-results-subtitle');
+      if (pct >= 90) subtitle.textContent = "¡Excelente dominio macroeconómico! Dominas los conceptos a la perfección.";
+      else if (pct >= 70) subtitle.textContent = "¡Buen trabajo! Tienes bases sólidas, repasa los errores señalados abajo.";
+      else subtitle.textContent = "Recomendamos repasar la sección de Fichas de Estudio y volver a intentarlo.";
+
+      // Generar desglose
+      const breakdown = document.getElementById('exam-breakdown-container');
+      breakdown.innerHTML = '';
+
+      currentExamQuestions.forEach((q, idx) => {
+        const userChoice = userAnswers[idx];
+        const isCorrect = userChoice === q.correctIndex;
+        const item = document.createElement('div');
+        item.className = `glass-card p-5 rounded-2xl border ${isCorrect ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-rose-500/30 bg-rose-500/5'} space-y-3`;
+
+        const userAnsText = userChoice !== undefined ? q.options[userChoice] : "No respondida";
+        const correctAnsText = q.options[q.correctIndex];
+
+        item.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-semibold ${isCorrect ? 'text-emerald-400' : 'text-rose-400'} flex items-center gap-1">
+              <i class="fa-solid ${isCorrect ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+              Pregunta ${idx + 1} - ${isCorrect ? 'Acierto' : 'Error'}
+            </span>
+            <span class="text-xs text-slate-400">${q.concept.title}</span>
+          </div>
+          
+          <h4 class="font-bold text-white text-base">${q.questionText}</h4>
+          
+          <div class="space-y-2 text-xs pt-2">
+            <div class="p-3 rounded-xl ${isCorrect ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-200' : 'bg-rose-500/10 border border-rose-500/20 text-rose-200'}">
+              <strong>Tu respuesta:</strong> ${userAnsText}
+            </div>
+            ${!isCorrect ? `
+              <div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300">
+                <strong class="text-emerald-400">Respuesta correcta:</strong> ${correctAnsText}
+              </div>
+            ` : ''}
+            <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-400">
+              <strong class="text-indigo-400">Explicación del concepto:</strong> ${q.concept.def}
+            </div>
+          </div>
+        `;
+        breakdown.appendChild(item);
+      });
+
+      document.getElementById('exam-active-screen').classList.add('hidden');
+      document.getElementById('exam-results-screen').classList.remove('hidden');
+    }
+
+    function resetExamSelection() {
+      document.getElementById('exam-results-screen').classList.add('hidden');
+      document.getElementById('exam-selection-screen').classList.remove('hidden');
+    }
+
+
+    // ==========================================
+    // LÓGICA DE MINIJUEGOS INTERACTIVOS
+    // ==========================================
+    function startGame(gameId) {
+      currentGame = gameId;
+      document.getElementById('games-menu-screen').classList.add('hidden');
+      document.getElementById('game-results-screen').classList.add('hidden');
+
+      if (gameId === 1) initGame1();
+      else if (gameId === 2) initGame2();
+      else if (gameId === 3) initGame3();
+    }
+
+    function quitGame() {
+      if (gameTimer) clearInterval(gameTimer);
+      document.querySelectorAll('#game1-screen, #game2-screen, #game3-screen, #game-results-screen').forEach(el => el.classList.add('hidden'));
+      document.getElementById('games-menu-screen').classList.remove('hidden');
+    }
+
+    // --- JUEGO 1: EMPAREJA O PIERDE (MEMORY MATCH) ---
+    function initGame1() {
+      document.getElementById('game1-screen').classList.remove('hidden');
+      
+      // Seleccionar 6 conceptos aleatorios (12 cartas en total)
+      const selected = [...CONCEPTS].sort(() => 0.5 - Math.random()).slice(0, 6);
+      g1Cards = [];
+      g1Flipped = [];
+      g1Matched = [];
+      g1Attempts = 0;
+      g1Failures = [];
+
+      selected.forEach(c => {
+        g1Cards.push({ id: c.id, type: 'title', content: c.title, concept: c });
+        // Definición resumida
+        const shortDef = c.def.length > 90 ? c.def.substring(0, 90) + '...' : c.def;
+        g1Cards.push({ id: c.id, type: 'def', content: shortDef, concept: c });
+      });
+
+      g1Cards.sort(() => 0.5 - Math.random());
+
+      gameTimeLeft = 90;
+      document.getElementById('g1-timer').textContent = `${gameTimeLeft}s`;
+      
+      if (gameTimer) clearInterval(gameTimer);
+      gameTimer = setInterval(() => {
+        gameTimeLeft--;
+        document.getElementById('g1-timer').textContent = `${gameTimeLeft}s`;
+        if (gameTimeLeft <= 0) {
+          clearInterval(gameTimer);
+          finishGame1(false);
+        }
+      }, 1000);
+
+      renderGame1Board();
+    }
+
+    function renderGame1Board() {
+      const board = document.getElementById('g1-board');
+      board.innerHTML = '';
+
+      g1Cards.forEach((card, idx) => {
+        const isFlipped = g1Flipped.includes(idx) || g1Matched.includes(card.id);
+        const btn = document.createElement('button');
+        btn.onclick = () => flipGame1Card(idx);
+        btn.className = `h-28 sm:h-32 p-3 rounded-2xl border text-xs font-semibold transition-all flex items-center justify-center text-center leading-snug ${
+          g1Matched.includes(card.id)
+            ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300 opacity-80 cursor-default'
+            : isFlipped
+            ? 'bg-indigo-900/80 border-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+            : 'bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-700 hover:text-slate-400'
+        }`;
+
+        if (isFlipped) {
+          btn.innerHTML = `<div><span class="text-[10px] uppercase font-bold text-indigo-400 block mb-1">${card.type === 'title' ? 'Concepto' : 'Definición'}</span>${card.content}</div>`;
+        } else {
+          btn.innerHTML = `<i class="fa-solid fa-question text-xl text-slate-700"></i>`;
+        }
+
+        board.appendChild(btn);
+      });
+    }
+
+    function flipGame1Card(idx) {
+      if (g1Flipped.length >= 2 || g1Flipped.includes(idx) || g1Matched.includes(g1Cards[idx].id)) return;
+
+      g1Flipped.push(idx);
+      renderGame1Board();
+
+      if (g1Flipped.length === 2) {
+        g1Attempts++;
+        const card1 = g1Cards[g1Flipped[0]];
+        const card2 = g1Cards[g1Flipped[1]];
+
+        if (card1.id === card2.id) {
+          // Pareja correcta
+          g1Matched.push(card1.id);
+          g1Flipped = [];
+          renderGame1Board();
+          if (g1Matched.length === 6) {
+            clearInterval(gameTimer);
+            finishGame1(true);
+          }
+        } else {
+          // Fallo
+          g1Failures.push({ c1: card1.concept, c2: card2.concept });
+          setTimeout(() => {
+            g1Flipped = [];
+            renderGame1Board();
+          }, 1200);
+        }
+      }
+    }
+
+    function finishGame1(won) {
+      document.getElementById('game1-screen').classList.add('hidden');
+      document.getElementById('game-results-screen').classList.remove('hidden');
+
+      const summary = document.getElementById('game-results-summary');
+      summary.innerHTML = won 
+        ? `¡Enhorabuena! Emparejaste todos los conceptos en <strong>${90 - gameTimeLeft} segundos</strong> con ${g1Attempts} intentos.`
+        : `¡Se acabó el tiempo! Lograste completar ${g1Matched.length} de 6 parejas.`;
+
+      const breakdown = document.getElementById('game-breakdown-container');
+      breakdown.innerHTML = '';
+
+      // Mostrar todos los pares jugados
+      const playedIds = [...new Set(g1Cards.map(c => c.id))];
+      playedIds.forEach(id => {
+        const concept = CONCEPTS.find(c => c.id === id);
+        const isMatched = g1Matched.includes(id);
+
+        const item = document.createElement('div');
+        item.className = `glass-card p-4 rounded-2xl border ${isMatched ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-rose-500/30 bg-rose-500/5'} space-y-2 text-xs`;
+        item.innerHTML = `
+          <div class="flex justify-between items-center font-bold text-white">
+            <span class="${isMatched ? 'text-emerald-400' : 'text-rose-400'}">${isMatched ? '✓ Emparejado' : '✗ No completado'}</span>
+            <span>${concept.title}</span>
+          </div>
+          <p class="text-slate-300">${concept.def}</p>
+        `;
+        breakdown.appendChild(item);
+      });
+    }
+
+    // --- JUEGO 2: VERDADERO O FALSO ---
+    function initGame2() {
+      document.getElementById('game2-screen').classList.remove('hidden');
+
+      const selected = [...CONCEPTS].sort(() => 0.5 - Math.random()).slice(0, 15);
+      g2Questions = selected.map(c => {
+        const isTrue = Math.random() > 0.5;
+        return {
+          concept: c,
+          isTrue: isTrue,
+          statement: isTrue ? `"${c.def}"` : `"${c.falseStmt}"`
+        };
+      });
+
+      g2Index = 0;
+      g2Score = 0;
+      g2UserAnswers = [];
+
+      renderGame2Question();
+    }
+
+    function renderGame2Question() {
+      const q = g2Questions[g2Index];
+      document.getElementById('g2-progress').textContent = `Pregunta ${g2Index + 1} de 15`;
+      document.getElementById('g2-concept-badge').textContent = q.concept.title;
+      document.getElementById('g2-statement-text').textContent = q.statement;
+    }
+
+    function answerGame2(userChoice) {
+      const q = g2Questions[g2Index];
+      const isCorrect = userChoice === q.isTrue;
+
+      if (isCorrect) g2Score++;
+      g2UserAnswers.push({ q: q, userChoice: userChoice, isCorrect: isCorrect });
+
+      g2Index++;
+      if (g2Index < 15) {
+        renderGame2Question();
+      } else {
+        finishGame2();
+      }
+    }
+
+    function finishGame2() {
+      document.getElementById('game2-screen').classList.add('hidden');
+      document.getElementById('game-results-screen').classList.remove('hidden');
+
+      document.getElementById('game-results-summary').innerHTML = `Obtuviste <strong>${g2Score} de 15 aciertos</strong> (${Math.round((g2Score/15)*100)}%).`;
+
+      const breakdown = document.getElementById('game-breakdown-container');
+      breakdown.innerHTML = '';
+
+      g2UserAnswers.forEach((ans, idx) => {
+        const item = document.createElement('div');
+        item.className = `glass-card p-4 rounded-2xl border ${ans.isCorrect ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-rose-500/30 bg-rose-500/5'} space-y-2 text-xs`;
+        item.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white">${idx + 1}. Concepto: ${ans.q.concept.title}</span>
+            <span class="${ans.isCorrect ? 'text-emerald-400 font-bold' : 'text-rose-400 font-bold'}">${ans.isCorrect ? 'Acierto' : 'Error'}</span>
+          </div>
+          <p class="text-slate-300 italic">${ans.q.statement}</p>
+          <div class="flex justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800">
+            <span>Tu respuesta: <strong class="${ans.userChoice ? 'text-emerald-400' : 'text-rose-400'}">${ans.userChoice ? 'VERDADERO' : 'FALSO'}</strong></span>
+            <span>Correcto: <strong class="text-white">${ans.q.isTrue ? 'VERDADERO' : 'FALSO'}</strong></span>
+          </div>
+          ${!ans.isCorrect ? `<div class="p-2 bg-slate-900 rounded text-slate-300"><strong>Definición real:</strong> ${ans.q.concept.def}</div>` : ''}
+        `;
+        breakdown.appendChild(item);
+      });
+    }
+
+    // --- JUEGO 3: CONTRARRELOJ ---
+    function initGame3() {
+      document.getElementById('game3-screen').classList.remove('hidden');
+
+      g3Score = 0;
+      g3Streak = 0;
+      g3MaxStreak = 0;
+      g3History = [];
+      gameTimeLeft = 45;
+
+      document.getElementById('g3-score').textContent = g3Score;
+      document.getElementById('g3-timer').textContent = `${gameTimeLeft}s`;
+
+      if (gameTimer) clearInterval(gameTimer);
+      gameTimer = setInterval(() => {
+        gameTimeLeft--;
+        document.getElementById('g3-timer').textContent = `${gameTimeLeft}s`;
+        if (gameTimeLeft <= 0) {
+          clearInterval(gameTimer);
+          finishGame3();
+        }
+      }, 1000);
+
+      nextGame3Question();
+    }
+
+    function nextGame3Question() {
+      const concept = CONCEPTS[Math.floor(Math.random() * CONCEPTS.length)];
+      const distractors = CONCEPTS.filter(c => c.id !== concept.id)
+                                  .sort(() => 0.5 - Math.random())
+                                  .slice(0, 3)
+                                  .map(c => c.def);
+
+      const options = [concept.def, ...distractors].sort(() => 0.5 - Math.random());
+      const correctIndex = options.indexOf(concept.def);
+
+      g3CurrentQ = {
+        concept: concept,
+        options: options,
+        correctIndex: correctIndex
+      };
+
+      document.getElementById('g3-question-text').textContent = `¿Qué opción define correctamente "${concept.title}"?`;
+
+      const container = document.getElementById('g3-options-container');
+      container.innerHTML = '';
+
+      options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.onclick = () => answerGame3(idx);
+        btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900 hover:bg-slate-800 text-xs text-slate-200 transition-all leading-relaxed flex items-center gap-2";
+        btn.innerHTML = `<span class="w-5 h-5 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-[10px] text-slate-400 shrink-0">${String.fromCharCode(65 + idx)}</span> ${opt}`;
+        container.appendChild(btn);
+      });
+    }
+
+    function answerGame3(selectedIdx) {
+      const isCorrect = selectedIdx === g3CurrentQ.correctIndex;
+
+      if (isCorrect) {
+        g3Score++;
+        g3Streak++;
+        if (g3Streak > g3MaxStreak) g3MaxStreak = g3Streak;
+        gameTimeLeft += 3; // +3 segundos extra
+      } else {
+        g3Streak = 0;
+        gameTimeLeft = Math.max(0, gameTimeLeft - 2); // Penalización -2 segundos
+      }
+
+      g3History.push({
+        q: g3CurrentQ,
+        selectedIdx: selectedIdx,
+        isCorrect: isCorrect
+      });
+
+      document.getElementById('g3-score').textContent = g3Score;
+      document.getElementById('g3-timer').textContent = `${gameTimeLeft}s`;
+
+      if (gameTimeLeft > 0) {
+        nextGame3Question();
+      }
+    }
+
+    function finishGame3() {
+      document.getElementById('game3-screen').classList.add('hidden');
+      document.getElementById('game-results-screen').classList.remove('hidden');
+
+      document.getElementById('game-results-summary').innerHTML = `
+        Puntaje total: <strong>${g3Score} puntos</strong> | Racha máxima: <strong>${g3MaxStreak} aciertos consecutivos</strong>.
+      `;
+
+      const breakdown = document.getElementById('game-breakdown-container');
+      breakdown.innerHTML = '';
+
+      g3History.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = `glass-card p-4 rounded-2xl border ${item.isCorrect ? 'border-emerald-500/30 bg-emerald-500/5' : 'border-rose-500/30 bg-rose-500/5'} space-y-2 text-xs`;
+        card.innerHTML = `
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white">${idx + 1}. Concepto: ${item.q.concept.title}</span>
+            <span class="${item.isCorrect ? 'text-emerald-400' : 'text-rose-400'} font-bold">${item.isCorrect ? '+1 Pt (+3s)' : 'Error (-2s)'}</span>
+          </div>
+          ${!item.isCorrect ? `
+            <p class="text-rose-300"><strong>Seleccionaste:</strong> ${item.q.options[item.selectedIdx]}</p>
+            <p class="text-emerald-300"><strong>Correcto:</strong> ${item.q.options[item.q.correctIndex]}</p>
+          ` : `<p class="text-slate-300">${item.q.concept.def}</p>`}
+        `;
+        breakdown.appendChild(card);
+      });
+    }
+
+
+    // ==========================================
+    // LÓGICA DE RESUMEN INTEGRAL (COMPENDIO COMPLETO)
+    // ==========================================
+    function renderSummary() {
+      const container = document.getElementById('summary-accordion-container');
+      container.innerHTML = '';
+
+      const sections = [
+        { id: 1, title: "I. Crecimiento del Dinero e Inflación (Teoría Monetaria)" },
+        { id: 2, title: "II. Política Fiscal, Finanzas Públicas y Estabilización" },
+        { id: 3, title: "III. Macroeconomía de una Economía Abierta" },
+        { id: 4, title: "IV. Comercio Internacional y Política Comercial" },
+        { id: 5, title: "V. Economía Global: Globalización" },
+        { id: 6, title: "VI. Economía Global: Política Económica Global" },
+        { id: 7, title: "VII. Economía Global: Integración Económica" }
+      ];
+
+      sections.forEach(sec => {
+        const secConcepts = CONCEPTS.filter(c => c.sec === sec.id);
+
+        const secBlock = document.createElement('div');
+        secBlock.className = "glass-card rounded-3xl border border-slate-800 overflow-hidden summary-sec-block";
+        secBlock.setAttribute('data-sec-id', sec.id);
+
+        let conceptsHTML = '';
+        secConcepts.forEach(c => {
+          conceptsHTML += `
+            <div class="p-5 bg-slate-900/60 rounded-2xl border border-slate-800/80 space-y-3 summary-concept-card" data-title="${c.title.toLowerCase()}" data-def="${c.def.toLowerCase()}">
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="font-bold text-white text-base sm:text-lg flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-indigo-400"></span> ${c.title}
+                </h4>
+                <span class="text-xs text-slate-500 font-mono">ID #${c.id}</span>
+              </div>
+              
+              <p class="text-slate-300 text-sm leading-relaxed">${c.def}</p>
+              
+              ${c.extra ? `
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800/80 text-xs text-indigo-300 font-mono">
+                  <i class="fa-solid fa-square-root-variable mr-1 text-indigo-400"></i> ${c.extra}
+                </div>
+              ` : ''}
+            </div>
+          `;
+        });
+
+        // Si es la Sección II, agregar la Tabla de Instrumentos de Política Fiscal
+        let extraTableHTML = '';
+        if (sec.id === 2) {
+          extraTableHTML = `
+            <div class="p-5 bg-indigo-950/30 rounded-2xl border border-indigo-500/30 space-y-4 my-4">
+              <h4 class="font-bold text-indigo-300 text-base flex items-center gap-2">
+                <i class="fa-solid fa-table"></i> Matriz de Instrumentos y Regímenes de Política Fiscal
+              </h4>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr class="border-b border-indigo-500/30 text-indigo-200 bg-indigo-900/40">
+                      <th class="p-3 font-bold">Instrumento / Régimen</th>
+                      <th class="p-3 font-bold">Mecanismo de Acción</th>
+                      <th class="p-3 font-bold">Objetivo Macroeconómico</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-800 text-slate-300">
+                    <tr class="hover:bg-slate-900/40">
+                      <td class="p-3 font-semibold text-white">Política Fiscal Expansiva</td>
+                      <td class="p-3">Aumento del gasto público y/o reducción de tasas impositivas.</td>
+                      <td class="p-3 text-emerald-400">Impulsar la demanda agregada, reducir el desempleo y salir de una recesión.</td>
+                    </tr>
+                    <tr class="hover:bg-slate-900/40">
+                      <td class="p-3 font-semibold text-white">Política Fiscal Restrictiva</td>
+                      <td class="p-3">Recorte del gasto gubernamental y/o incremento de impuestos.</td>
+                      <td class="p-3 text-amber-400">Moderar el consumo agregado, reducir el déficit público y contener la inflación.</td>
+                    </tr>
+                    <tr class="hover:bg-slate-900/40">
+                      <td class="p-3 font-semibold text-white">Estabilizadores Automáticos</td>
+                      <td class="p-3">Impuestos progresivos y seguros de desempleo que actúan sin nuevas leyes.</td>
+                      <td class="p-3 text-sky-400">Amortiguar de forma automática las fluctuaciones del ciclo económico.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }
+
+        secBlock.innerHTML = `
+          <div class="p-6 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between cursor-pointer" onclick="toggleSecAccordion(${sec.id})">
+            <div class="flex items-center gap-3">
+              <span class="w-8 h-8 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold text-xs flex items-center justify-center">
+                ${sec.id}
+              </span>
+              <h3 class="font-extrabold text-white text-lg sm:text-xl">${sec.title}</h3>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs text-slate-400 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">${secConcepts.length} Conceptos</span>
+              <i id="sec-icon-${sec.id}" class="fa-solid fa-chevron-down text-slate-400 transition-transform"></i>
+            </div>
+          </div>
+
+          <div id="sec-body-${sec.id}" class="p-6 space-y-4">
+            ${extraTableHTML}
+            <div class="grid grid-cols-1 gap-4">
+              ${conceptsHTML}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(secBlock);
+      });
+    }
+
+    function toggleSecAccordion(secId) {
+      const body = document.getElementById(`sec-body-${secId}`);
+      const icon = document.getElementById(`sec-icon-${secId}`);
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        body.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+
+    function filterSummary() {
+      const searchVal = document.getElementById('summary-search').value.toLowerCase().trim();
+      const secVal = document.getElementById('summary-section-filter').value;
+
+      document.querySelectorAll('.summary-sec-block').forEach(secBlock => {
+        const secId = secBlock.getAttribute('data-sec-id');
+        let matchesSec = secVal === 'ALL' || secVal === secId;
+        let hasVisibleCards = false;
+
+        const cards = secBlock.querySelectorAll('.summary-concept-card');
+        cards.forEach(card => {
+          const title = card.getAttribute('data-title');
+          const def = card.getAttribute('data-def');
+          const matchesSearch = searchVal === '' || title.includes(searchVal) || def.includes(searchVal);
+
+          if (matchesSearch && matchesSec) {
+            card.classList.remove('hidden');
+            hasVisibleCards = true;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (hasVisibleCards && matchesSec) {
+          secBlock.classList.remove('hidden');
+          // Expandir sección si hay búsqueda activa
+          if (searchVal !== '') {
+            document.getElementById(`sec-body-${secId}`).classList.remove('hidden');
+          }
+        } else {
+          secBlock.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
